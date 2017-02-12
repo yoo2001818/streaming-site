@@ -18,6 +18,7 @@ module.exports = {
   auth: {
     secret: 'gorani cat',
   },
+  video: path.resolve(__dirname, '../video')
 };
 
 if (process.env.CONFIG_PATH != null) {

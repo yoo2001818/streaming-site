@@ -3,7 +3,7 @@ extends layout.pug
 block content
   .dialog.login-dialog
     h1.title Login
-    form(action='/login' method='post').content
+    form(action='/login?callback=' + callback, method='post').content
       if failed
         .form-error Invalid username or password.
       input(type='text' name='username' placeholder='Username')

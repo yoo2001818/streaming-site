@@ -7,17 +7,18 @@ const router = new Router();
 
 router.route('/login')
 .get((req, res) => {
-  res.render('login', { failed: false });
+  res.render('login', { callback: '' });
 })
 .post((req, res) => {
   let { username, password } = req.body;
   let isValid = authTest(username, password);
   if (isValid) {
     req.session.authorized = true;
-    res.redirect('/');
+    res.redirect(req.query.callback || '/');
   } else {
     res.status(401);
-    res.render('login', { failed: true });
+    res.render('login', { callback: encodeURIComponent(req.query.callback) ||
+       '', failed: true });
   }
 });
 
@@ -26,7 +27,7 @@ router.use((req, res, next) => {
   if (req.session.authorized) return next();
   res.status(401);
   if (req.accepts('html')) {
-    res.render('login', { failed: true });
+    res.render('login', { callback: encodeURIComponent(req.path) || '' });
   } else {
     res.send('401 Unauthorized');
   }

@@ -27,8 +27,13 @@ app.use(session({
   secret: config.auth.secret,
 }))
 
+app.get('/robots.txt', (req, res) => res.type('text/plain')
+  .send('User-Agent: *\nDisallow: /'));
+
 app.use('/assets', serveStatic(path.resolve(__dirname, '../assets')));
 app.use(require('./auth'));
+app.use(serveStatic(config.video));
+app.use(require('./listing'));
 
 if (config.network.https) {
   https.createServer(config.network.https, app)

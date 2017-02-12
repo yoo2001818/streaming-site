@@ -1,0 +1,6 @@
+extends browser.pug
+block content
+  video.playback(autoplay autostart controls width='100%')
+    source(src=mp4File type='video/mp4')
+    for srtFile in srtFiles
+      track(src=srtFile kind='subtitles' srclang='en' label='English')
