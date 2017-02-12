@@ -1,0 +1,12 @@
+extends layout.pug
+
+block content
+  .dialog.login-dialog
+    h1.title Login
+    form(action='/login' method='post').content
+      if failed
+        .form-error Invalid username or password.
+      input(type='text' name='username' placeholder='Username')
+      input(type='password' name='password' placeholder='Password')
+      .controls
+        input.submit(type='submit' value='Login')

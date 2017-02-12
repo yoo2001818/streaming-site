@@ -1,0 +1,102 @@
+html, body {
+  padding: 0;
+  margin: 0;
+  background: #ebebed;
+  color: #303033;
+  font-family: 나눔바른고딕,나눔고딕,NanumGothic,맑은 고딕,
+    돋움,Dotum,Arial,Helvetica,sans-serif;
+}
+
+a {
+  color: #086ca4;
+  text-decoration: none;
+}
+
+a:hover{
+  text-decoration: underline;
+}
+
+#content {
+  max-width: 45rem;
+  margin: 0 auto;
+  padding: .5em;
+}
+
+.dialog {
+  background-color: #f8f8f8;
+  border: 1px solid #c8c8cb;
+  padding: 0.2em;
+  border-radius: 2px;
+  max-width: 100vw;
+  box-sizing: border-box;
+  max-width: 22rem;
+  margin: 2em auto 0;
+}
+.dialog > .title {
+  color: #de7504;
+  margin: 0;
+  padding: 0.5em 1em;
+  text-align: left;
+  font-size: 1.1em;
+  font-weight: bold;
+  border-bottom: 1px solid #de7504;
+}
+.dialog > .content {
+  margin: 1em 2em;
+}
+.dialog > .content > .controls {
+  margin-top: 1em;
+}
+
+.form-error {
+  padding: 0.5em;
+  border-radius: 2px;
+  margin: 0.1em 0;
+  color: #fdcfcf;
+  background-color: #a60606;
+  font-size: 0.9em;
+  text-align: center;
+}
+
+input {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+}
+input[type='text'], input[type='password'] {
+  font-size: 1em;
+  background-color: #fff;
+  color: #303033;
+  padding: 0.5em 0.6em;
+  margin: 0.2em 0;
+  border-radius: 2px;
+  border: 1px solid #c8c8cb;
+}
+input[type='text']:hover, input[type='password']:hover {
+  border-color: #9f9fa3;
+}
+input[type='text']:focus, input[type='password']:focus,
+input[type='text']:active, input[type='password']:active {
+  border-color: #4eb6f2;
+}
+input[type='button'], input[type='submit'] {
+  font-size: 1em;
+  background-color: #0f8bd2;
+  color: #f8f8f8;
+  padding: 0.5em 1.9em;
+  margin: 0.2em 0;
+  border: none;
+  border-radius: 2px;
+  cursor: default;
+  vertical-align: middle;
+}
+input[type='button']:hover, input[type='submit']:hover,
+input[type='button']:focus, input[type='submit']:focus {
+  background-color: #21a4ef;
+}
+input[type='button']:hover:active, input[type='submit']:hover:active {
+  background-color: #086ca4;
+}
+input[type='button']:active, input[type='submit']:active {
+  background-color: #0f8bd2;
+}
