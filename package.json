@@ -22,6 +22,7 @@
     "parseurl": "^1.3.1",
     "pug": "^2.0.0-beta11",
     "serve-static": "^1.11.2",
-    "srt-to-vtt": "^1.1.1"
+    "srt-to-vtt": "^1.1.1",
+    "throttle": "^1.0.3"
   }
 }

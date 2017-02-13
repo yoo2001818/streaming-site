@@ -12,7 +12,7 @@ block content
         a(href=file.path)
           span.title= file.filename
           span.metadata
-            span.updated= formatDate(file.updated)
-            span.size= file.size
             if file.hasSubtitle
               span.subtitle(title='has subtitle')
+            span.size= file.size
+            span.updated= formatDate(file.updated)

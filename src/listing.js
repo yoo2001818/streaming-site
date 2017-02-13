@@ -115,9 +115,11 @@ module.exports = function listing(req, res, next) {
       // by listing handler too)
       let srtFiles = list.filter(v => v.endsWith('.srt'))
         .map(v => v.slice(0, -4) + '.vtt');
+      let vttFiles = list.filter(v => v.endsWith('.srt'))
+        .map(v => v.slice(0, -4) + '.vtt');
       // Render it....
       res.render('playback', Object.assign({ name: remainingPath, mp4File,
-        srtFiles }, baseLocals));
+        srtFiles, vttFiles }, baseLocals));
     });
   })
   .catch(err => {

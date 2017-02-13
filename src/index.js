@@ -7,6 +7,7 @@ const express = require('express');
 const serveStatic = require('serve-static');
 const bodyParser = require('body-parser');
 const session = require('express-session');
+const Throttle = require('throttle');
 
 const logger = require('./util/logger');
 
@@ -32,7 +33,24 @@ app.get('/robots.txt', (req, res) => res.type('text/plain')
 
 app.use('/assets', serveStatic(path.resolve(__dirname, '../assets')));
 app.use(require('./auth'));
-app.use(serveStatic(config.video));
+
+const createThrottle = () => new Throttle(config.bandwidth);
+let videoStatic = serveStatic(config.video);
+app.use((req, res, next) => {
+  // stream emits 'pipe' event when piped
+  res.on('pipe', function (readStream) {
+      // protects against infinite loop
+      if (readStream instanceof Throttle) {
+          return;
+      }
+      // first unpipe streams
+      readStream.unpipe(res);
+      // then reattach with Transform type between streams
+      // Throttle class extends require('stream').Transform
+      readStream.pipe(createThrottle()).pipe(res);
+  });
+  videoStatic(req, res, next);
+});
 app.use(require('./listing'));
 
 if (config.network.https) {

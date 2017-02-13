@@ -12,13 +12,15 @@ module.exports = {
     access: {
       directory: 'logs',
       filename: 'access.log',
-      format: 'access',
+      format: 'combined',
     },
   },
   auth: {
     secret: 'gorani cat',
   },
   video: path.resolve(__dirname, '../video'),
+  // Bandwidth limit in bps.
+  bandwidth: 5500 * 1024,
   passwd: {
     test: '53'
   }
