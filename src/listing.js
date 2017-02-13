@@ -5,6 +5,7 @@ const parseurl = require('parseurl');
 const path = require('path');
 const fs = require('fs-promise');
 const srt2vtt = require('srt-to-vtt');
+const replaceStream = require('replacestream');
 
 const formatDate = require('./util/formatDate');
 const config = require('../config');
@@ -54,6 +55,7 @@ module.exports = function listing(req, res, next) {
     if (stats.isFile() && convertVTT) {
       // Convert srt to vtt
       fs.createReadStream(realPath)
+      .pipe(replacestream('\\h', ' '))
       .pipe(srt2vtt()).pipe(res);
       return;
     }
