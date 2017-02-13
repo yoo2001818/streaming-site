@@ -103,20 +103,28 @@ module.exports = function listing(req, res, next) {
         return stats;
       }))))
     .then(list => list.filter(v => v.isFile() &&
-      v.filename.startsWith(remainingPath))
-      .map(v => encodeurl(path.resolve(parentListingPath, v.filename))))
+      v.filename.startsWith(remainingPath)))
     .then(list => {
       if (list.length === 0) return next();
       // Look for mp4 file
-      let mp4File = list.find(v => /\.(mp4|mkv|m4v)$/.test(v));
+      let mp4File = list.find(v => /\.(mp4|mkv|m4v)$/.test(v.filename));
       if (mp4File == null) return next();
+      mp4File = {
+        name: mp4File.filename,
+        path: encodeurl(path.resolve(parentListingPath, mp4File.filename)),
+      };
       // srt files. No language will be detected, though.
       // If srt file is detected, convert it to vtt. (It'll be converted
       // by listing handler too)
-      let srtFiles = list.filter(v => v.endsWith('.srt'))
-        .map(v => v.slice(0, -4) + '.vtt');
-      let vttFiles = list.filter(v => v.endsWith('.srt'))
-        .map(v => v.slice(0, -4) + '.vtt');
+      let srtFiles = list.filter(v => v.filename.endsWith('.srt')).map(v => ({
+        name: v.filename,
+        path: encodeurl(path.resolve(parentListingPath, v.filename)),
+        lang: v.filename.endsWith('.Korean.srt') ? 'ko' : 'en',
+        label: v.filename.endsWith('.Korean.srt') ? '한국어' : 'English',
+      }));
+      let vttFiles = srtFiles.map(v => Object.assign({}, v, {
+        path: v.path.slice(0, -4) + '.vtt'
+      }));
       // Render it....
       res.render('playback', Object.assign({ name: remainingPath, mp4File,
         srtFiles, vttFiles }, baseLocals));

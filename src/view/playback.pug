@@ -1,6 +1,12 @@
 extends browser.pug
 block content
   video.playback(autoplay autostart controls width='100%')
-    source(src=mp4File type='video/mp4')
+    source(src=mp4File.path type='video/mp4')
     for vttFile in vttFiles
-      track(src=vttFile kind='subtitles' srclang='en' label='English')
+      track(src=vttFile.path kind='subtitles' srclang=vttFile.lang label=vttFile.label)
+  ul.download-list
+    li.mp4
+      a(href=mp4File.path + '?download' download)= mp4File.name
+    for srtFile in srtFiles
+      li.srt
+        a(href=srtFile.path + '?download' download)= srtFile.name

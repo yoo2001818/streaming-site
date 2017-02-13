@@ -40,9 +40,9 @@ app.use((req, res, next) => {
   // stream emits 'pipe' event when piped
   res.on('pipe', function (readStream) {
       // protects against infinite loop
-      if (readStream instanceof Throttle) {
-          return;
-      }
+      if (readStream instanceof Throttle) return;
+      // ignore if downloading
+      if (req.query.download != null) return;
       // first unpipe streams
       readStream.unpipe(res);
       // then reattach with Transform type between streams
