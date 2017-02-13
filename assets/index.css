@@ -104,7 +104,6 @@ input[type='button']:active, input[type='submit']:active {
 }
 
 .playback {
-  border: 1px solid #9f9fa3;
   width: 100%;
 }
 
