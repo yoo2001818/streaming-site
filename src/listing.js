@@ -55,7 +55,7 @@ module.exports = function listing(req, res, next) {
     if (stats.isFile() && convertVTT) {
       // Convert srt to vtt
       fs.createReadStream(realPath)
-      .pipe(replacestream('\\h', ' '))
+      .pipe(replaceStream('\\h', ' '))
       .pipe(srt2vtt()).pipe(res);
       return;
     }
