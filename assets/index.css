@@ -19,7 +19,7 @@ a:visited {
 }
 
 #container {
-  max-width: 55rem;
+  /* max-width: 55rem; */
   margin: 0 auto;
   padding: 0 .5em;
 }
@@ -105,6 +105,7 @@ input[type='button']:active, input[type='submit']:active {
 
 .playback {
   width: 100%;
+  max-height: 90vh;
 }
 
 .header {
@@ -208,4 +209,10 @@ input[type='button']:active, input[type='submit']:active {
 }
 .listing span:last-child {
   margin: 0;
+}
+
+.text {
+  max-width: 55em;
+  margin-left: auto;
+  margin-right: auto;
 }

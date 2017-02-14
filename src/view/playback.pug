@@ -4,7 +4,7 @@ block content
     source(src=mp4File.path type='video/mp4')
     for vttFile in vttFiles
       track(src=vttFile.path kind='subtitles' srclang=vttFile.lang label=vttFile.label)
-  ul.download-list
+  ul.download-list.text
     li.mp4
       a(href=mp4File.path + '?download' download)= mp4File.name
     for srtFile in srtFiles
