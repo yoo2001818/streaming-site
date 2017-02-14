@@ -21,9 +21,7 @@ module.exports = {
   video: path.resolve(__dirname, '../video'),
   // Bandwidth limit in bps.
   bandwidth: 5500 * 1024,
-  passwd: {
-    test: '53'
-  }
+  passwd: path.resolve(__dirname, 'passwd'),
 };
 
 if (process.env.CONFIG_PATH != null) {

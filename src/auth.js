@@ -11,15 +11,17 @@ router.route('/login')
 })
 .post((req, res) => {
   let { username, password } = req.body;
-  let isValid = authTest(username, password);
-  if (isValid) {
-    req.session.authorized = true;
-    res.redirect(req.query.callback || '/');
-  } else {
-    res.status(401);
-    res.render('login', { callback: encodeURIComponent(req.query.callback) ||
-       '', failed: true });
-  }
+  authTest(username, password)
+  .then(isValid => {
+    if (isValid) {
+      req.session.authorized = true;
+      res.redirect(req.query.callback || '/');
+    } else {
+      res.status(401);
+      res.render('login', { callback: encodeURIComponent(req.query.callback) ||
+         '', failed: true });
+    }
+  });
 });
 
 router.use((req, res, next) => {

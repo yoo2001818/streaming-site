@@ -1,9 +1,17 @@
 'use strict';
 
 const passwd = require('../../config').passwd;
+const fs = require('fs-promise');
 
 // Validates the username / password pair. Returns true if valid.
 module.exports = function (username, password) {
-  if (username in passwd && passwd[username] === password) return true;
-  return false;
+  return fs.readFile(passwd, 'utf-8')
+  .then(data => {
+    let passwds = data.split('\n').map(v => v.split(':'));
+    if (passwds.some(v => v[0] === username && v[1] === password)) return true;
+    return false;
+  })
+  .catch(() => {
+    return false;
+  });
 }
