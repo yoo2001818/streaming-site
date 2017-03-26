@@ -133,19 +133,21 @@ module.exports = function listing(req, res, next) {
       let mp4File = list.find(v => /\.(mp4|mkv|m4v)$/.test(v.filename));
       if (mp4File == null) return next();
       mp4File = {
-        version: 'Original',
+        encoding: 'Original',
         name: mp4File.filename,
         path: encodeurl(path.resolve(parentListingPath,
           encodeURIComponent(mp4File.filename))),
+        size: stringifySize(mp4File.size),
       };
       let mp4Files = encodeList.filter(v =>
         v.filename.startsWith(mp4File.name.slice(0, -4)) &&
         /\.(mp4|mkv|m4v)$/.test(v.filename))
         .map(v => ({
-          version: /\.(.+?)\.(mp4|mkv|m4v)$/.exec(v.filename)[1],
+          encoding: /\.(.+?)\.(mp4|mkv|m4v)$/.exec(v.filename)[1],
           name: v.filename,
           path: encodeurl(path.resolve(parentEncodeListingPath,
             encodeURIComponent(v.filename))),
+          size: stringifySize(v.size),
         }));
       // Prepend original mp4 file
       mp4Files.unshift(mp4File);

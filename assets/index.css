@@ -108,6 +108,14 @@ input[type='button']:active, input[type='submit']:active {
   max-height: 90vh;
 }
 
+.encoding-list .name {
+  margin-right: 0.3em;
+}
+
+.encoding-list .size {
+  font-size: 0.7em;
+}
+
 .header {
   padding: 0.5em 0;
 }
@@ -136,7 +144,17 @@ input[type='button']:active, input[type='submit']:active {
   display: inline-block;
 }
 
-.breadcrumb a {
+.list-strip {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.list-strip li {
+  display: inline-block;
+}
+
+.list-strip a {
   display: inline-block;
   color: #fff;
   background-color: #0f8bd2;
@@ -146,13 +164,13 @@ input[type='button']:active, input[type='submit']:active {
   border-radius: 2px;
   vertical-align: middle;
 }
-.breadcrumb a:hover, .breadcrumb a:focus {
+.list-strip a:hover, .list-strip a:focus {
   background-color: #21a4ef;
 }
-.breadcrumb a:hover:active {
+.list-strip a:hover:active {
   background-color: #086ca4;
 }
-.breadcrumb a:active {
+.list-strip a:active {
   background-color: #0f8bd2;
 }
 
