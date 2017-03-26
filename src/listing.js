@@ -73,14 +73,15 @@ module.exports = function listing(req, res, next) {
       let directories = list.filter(stats => stats.isDirectory())
         .map(stats => ({
           filename: stats.filename,
-          path: encodeurl(path.resolve(listingPath, stats.filename)),
+          path: encodeurl(path.resolve(listingPath,
+            encodeURIComponent(stats.filename))),
           updated: stats.mtime,
         }));
       let files = list.filter(stats => stats.isFile() &&
         /\.(mp4|mkv|m4v)$/.test(stats.filename)).map(stats => ({
           filename: stats.filename.slice(0, -4),
           path: encodeurl(path.resolve(listingPath,
-            stats.filename.slice(0, -4))),
+            encodeURIComponent(stats.filename.slice(0, -4)))),
           size: stringifySize(stats.size),
           updated: stats.mtime,
           hasSubtitle:
@@ -113,14 +114,16 @@ module.exports = function listing(req, res, next) {
       if (mp4File == null) return next();
       mp4File = {
         name: mp4File.filename,
-        path: encodeurl(path.resolve(parentListingPath, mp4File.filename)),
+        path: encodeurl(path.resolve(parentListingPath,
+          encodeURIComponent(mp4File.filename))),
       };
       // srt files. No language will be detected, though.
       // If srt file is detected, convert it to vtt. (It'll be converted
       // by listing handler too)
       let srtFiles = list.filter(v => v.filename.endsWith('.srt')).map(v => ({
         name: v.filename,
-        path: encodeurl(path.resolve(parentListingPath, v.filename)),
+        path: encodeurl(path.resolve(parentListingPath,
+          encodeURIComponent(v.filename))),
         lang: v.filename.endsWith('.Korean.srt') ? 'ko' : 'en',
         label: v.filename.endsWith('.Korean.srt') ? '한국어' : 'English',
       }));
