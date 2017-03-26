@@ -1,12 +1,15 @@
 extends browser.pug
 block content
-  video.playback(autoplay autostart controls width='100%')
-    source(src=mp4File.path type='video/mp4')
+  video#playback(autoplay autostart controls width='100%')
+    for mp4File in mp4Files
+      source(src=mp4File.path name=mp4File.version type='video/mp4')
     for vttFile in vttFiles
       track(src=vttFile.path kind='subtitles' srclang=vttFile.lang label=vttFile.label)
   ul.download-list.text
-    li.mp4
-      a(href=mp4File.path + '?download' download)= mp4File.name
+    for mp4File in mp4Files
+      li.mp4
+        a(href=mp4File.path + '?download' download)= mp4File.name
     for srtFile in srtFiles
       li.srt
         a(href=srtFile.path + '?download' download)= srtFile.name
+  script(src='/assets/playback.js')

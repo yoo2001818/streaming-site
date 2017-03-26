@@ -20,6 +20,7 @@ module.exports = {
   },
   video: path.resolve(__dirname, '../video'),
   videoEncode: path.resolve(__dirname, '../video/Workload'),
+  videoEncodePublic: '/Workload',
   // Bandwidth limit in bps.
   bandwidth: 5500 * 1024,
   passwd: path.resolve(__dirname, 'passwd'),

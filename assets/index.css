@@ -103,7 +103,7 @@ input[type='button']:active, input[type='submit']:active {
   background-color: #0f8bd2;
 }
 
-.playback {
+#playback {
   width: 100%;
   max-height: 90vh;
 }
@@ -226,6 +226,8 @@ input[type='button']:active, input[type='submit']:active {
   border-radius: 3px;
   font-size: 0.7em;
   padding: 0.2em 0.3em;
+  line-height: 1.3rem;
+  vertical-align: middle;
 }
 
 .listing span {

@@ -114,27 +114,41 @@ module.exports = function listing(req, res, next) {
   }, err => {
     if (err.code !== 'ENOENT') throw err;
     // Check if we should start a player. This simply reimplements glob...
+    let parentEncodePath = path.join(config.videoEncode, pathVal, '..');
+    let parentEncodeListingPath = path.join(config.videoEncodePublic,
+      pathVal, '..');
     let parentPath = path.join(realPath, '..');
     let remainingPath = realPath.slice(parentPath.length + 1);
     let parentListingPath = path.join(listingPath, '..');
-    return fs.readdir(parentPath)
-    .then(list => Promise.all(list.map(v =>
-      fs.stat(path.resolve(parentPath, v)).then(stats => {
-        stats.filename = v;
-        return stats;
-      }))))
-    .then(list => list.filter(v => v.isFile() &&
-      v.filename.startsWith(remainingPath)))
-    .then(list => {
+    return Promise.all([readdir(parentPath)].concat(config.videoEncode ? [
+      readdir(parentEncodePath)
+      // Ignore errors
+      .then(v => v, () => [])
+    ] : [Promise.resolve([])]))
+    .then(lists => lists.map(list => list.filter(v => v.isFile() &&
+      v.filename.startsWith(remainingPath))))
+    .then(([list, encodeList]) => {
       if (list.length === 0) return next();
       // Look for mp4 file
       let mp4File = list.find(v => /\.(mp4|mkv|m4v)$/.test(v.filename));
       if (mp4File == null) return next();
       mp4File = {
+        version: 'Original',
         name: mp4File.filename,
         path: encodeurl(path.resolve(parentListingPath,
           encodeURIComponent(mp4File.filename))),
       };
+      let mp4Files = encodeList.filter(v =>
+        v.filename.startsWith(mp4File.name.slice(0, -4)) &&
+        /\.(mp4|mkv|m4v)$/.test(v.filename))
+        .map(v => ({
+          version: /\.(.+?)\.(mp4|mkv|m4v)$/.exec(v.filename)[1],
+          name: v.filename,
+          path: encodeurl(path.resolve(parentEncodeListingPath,
+            encodeURIComponent(v.filename))),
+        }));
+      // Prepend original mp4 file
+      mp4Files.unshift(mp4File);
       // srt files. No language will be detected, though.
       // If srt file is detected, convert it to vtt. (It'll be converted
       // by listing handler too)
@@ -149,7 +163,7 @@ module.exports = function listing(req, res, next) {
         path: v.path.slice(0, -4) + '.vtt'
       }));
       // Render it....
-      res.render('playback', Object.assign({ name: remainingPath, mp4File,
+      res.render('playback', Object.assign({ name: remainingPath, mp4Files,
         srtFiles, vttFiles }, baseLocals));
     });
   })

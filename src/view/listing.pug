@@ -18,7 +18,7 @@ block content
           ul.encodes
             for encode in file.encodes
               li.encode.other
-                a.content(href=file.path + '?encode=' + encode.name)
+                a.content(href=file.path + '#' + encode.name)
                   span.name= encode.name
                   span.size= encode.size
             li.encode.original
