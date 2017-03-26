@@ -31,6 +31,15 @@ function stringifySize(_size) {
   return size.toFixed(1) + 'GB';
 }
 
+function readdir(readPath) {
+  return fs.readdir(readPath)
+  .then(list => Promise.all(list.map(v =>
+    fs.stat(path.resolve(readPath, v)).then(stats => {
+      stats.filename = v;
+      return stats;
+    }))));
+}
+
 module.exports = function listing(req, res, next) {
   if (req.method !== 'GET' && req.method !== 'HEAD') return next();
   let pathVal = decode(parseurl(req).pathname);
@@ -61,16 +70,18 @@ module.exports = function listing(req, res, next) {
     }
     if (!stats.isDirectory()) return next();
     // Show the filesystem listing
-    return fs.readdir(realPath)
-    .then(list => Promise.all(list.map(v =>
-      fs.stat(path.resolve(realPath, v)).then(stats => {
-        stats.filename = v;
-        return stats;
-      }))))
-    .then(list => {
+    return Promise.all([readdir(realPath)].concat(config.videoEncode ? [
+      readdir(path.join(config.videoEncode, pathVal))
+      // Ignore errors
+      .then(v => v, () => [])
+    ] : [Promise.resolve([])]))
+    .then(([list, encodeList]) => {
       // For directories, we can just show it without any problem.
       // However, for files, we should only allow mp4 files, without extension.
       let directories = list.filter(stats => stats.isDirectory())
+        // Hide video encode directory
+        .filter(stats => path.resolve(realPath, stats.filename) !==
+          config.videoEncode)
         .map(stats => ({
           filename: stats.filename,
           path: encodeurl(path.resolve(listingPath,
@@ -86,7 +97,14 @@ module.exports = function listing(req, res, next) {
           updated: stats.mtime,
           hasSubtitle:
             list.some(v => v.filename.startsWith(stats.filename.slice(0, -4))
-              && v.filename.endsWith('.srt'))
+              && v.filename.endsWith('.srt')),
+          encodes: encodeList
+            .filter(v => v.filename.startsWith(stats.filename.slice(0, -4))
+              && /\.(mp4|mkv|m4v)$/.test(v.filename))
+            .map(v => ({
+              name: /\.(.+?)\.(mp4|mkv|m4v)$/.exec(v.filename)[1],
+              size: stringifySize(v.size),
+            })),
         }));
       // I don't feel good for including formatting function inside here,
       // but there's no other way.

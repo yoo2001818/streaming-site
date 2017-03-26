@@ -164,38 +164,64 @@ input[type='button']:active, input[type='submit']:active {
   border: 1px solid #9f9fa3;
 }
 
-.listing li {
+.listing > li {
   padding: 0.5em 0.8em;
   border-top: 1px solid #c8c8cb;
   background-color: #ebebed;
 }
-.listing li:first-child {
+.listing > li:first-child {
   border-top-width: 0px;
   border-radius: 3px 3px 0 0;
 }
-.listing li:last-child {
+.listing > li:last-child {
   border-radius: 0 0 3px 3px;
 }
-.listing li:nth-child(2n) {
+.listing > li:nth-child(2n) {
   background-color: #f8f8f8;
 }
 
-.listing li:after {
+.listing > li:after {
   content: '';
   display: block;
   clear: both;
 }
 
 .listing .metadata {
+  text-align: right;
   float: right;
   font-size: 0.9em;
   color: #7e7e85;
 }
 
-.listing .subtitle:before {
+.listing .metadata .encodes {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+.listing .metadata .encodes > li {
+  display: inline-block;
+  margin-right: 0.5em;
+}
+
+.listing .metadata .encodes > .original .name {
+  display: none;
+}
+
+.listing .metadata .encodes > .original .content {
+  border: none;
+  font-size: 1em;
+  padding: 0;
+  margin: 0;
+}
+
+.listing .subtitle .content:before {
   content: 'CC';
 }
-.listing .subtitle {
+.listing .content {
+  display: inline;
   border: 1px solid #7e7e85;
   border-radius: 3px;
   font-size: 0.7em;
@@ -203,6 +229,7 @@ input[type='button']:active, input[type='submit']:active {
 }
 
 .listing span {
+  display: inline-block;
   margin-right: 0.5em;
   line-height: 1.3rem;
   vertical-align: middle;
