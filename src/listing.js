@@ -102,7 +102,7 @@ module.exports = function listing(req, res, next) {
             .filter(v => v.filename.startsWith(stats.filename.slice(0, -4))
               && /\.(mp4|mkv|m4v)$/.test(v.filename))
             .map(v => ({
-              name: /\.(.+?)\.(mp4|mkv|m4v)$/.exec(v.filename)[1],
+              name: /\.([^.]+)\.(mp4|mkv|m4v)$/.exec(v.filename)[1],
               size: stringifySize(v.size),
             })),
         }));
@@ -143,7 +143,7 @@ module.exports = function listing(req, res, next) {
         v.filename.startsWith(mp4File.name.slice(0, -4)) &&
         /\.(mp4|mkv|m4v)$/.test(v.filename))
         .map(v => ({
-          encoding: /\.(.+?)\.(mp4|mkv|m4v)$/.exec(v.filename)[1],
+          encoding: /\.([^.]+)\.(mp4|mkv|m4v)$/.exec(v.filename)[1],
           name: v.filename,
           path: encodeurl(path.resolve(parentEncodeListingPath,
             encodeURIComponent(v.filename))),
