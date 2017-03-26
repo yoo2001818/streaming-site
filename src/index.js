@@ -32,7 +32,7 @@ app.get('/robots.txt', (req, res) => res.type('text/plain')
   .send('User-Agent: *\nDisallow: /'));
 
 app.use('/assets', serveStatic(path.resolve(__dirname, '../assets')));
-// app.use(require('./auth'));
+app.use(require('./auth'));
 
 const createThrottle = () => new Throttle(config.bandwidth);
 let videoStatic = serveStatic(config.video);
