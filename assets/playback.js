@@ -147,6 +147,14 @@ function updatePlaybackRate() {
   }
 }
 
+function seekRelative(v) {
+  if (video.fastSeek) {
+    video.fastSeek(video.currentTime + v);
+  } else {
+    video.currentTime += v;
+  }
+}
+
 // Handle left / right, frame seeking, capturing.
 function handleKeyDown(e) {
   const { keyCode, ctrlKey, shiftKey, altKey } = e;
@@ -159,16 +167,16 @@ function handleKeyDown(e) {
         // Firefox non-standard stuff
         video.seekToNextFrame();
       } else {
-        video.currentTime += 1 / 23.97 * (shiftKey ? -1 : 1);
+        seekRelative(1 / 23.97 * (shiftKey ? -1 : 1));
       }
       break;
     case 37:
       // Left
-      video.currentTime -= getOffset(e);
+      seekRelative(-getOffset(e));
       break;
     case 39:
       // Right
-      video.currentTime += getOffset(e);
+      seekRelative(getOffset(e));
       break;
     case 83:
       // Capture.
