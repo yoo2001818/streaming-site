@@ -163,12 +163,7 @@ function handleKeyDown(e) {
       // Frame seek
       // Assume 23.97fps, as majority of video library uses 24fps
       video.pause();
-      if (!shiftKey && video.seekToNextFrame) {
-        // Firefox non-standard stuff
-        video.seekToNextFrame();
-      } else {
-        seekRelative(1 / 23.97 * (shiftKey ? -1 : 1));
-      }
+      seekRelative(1 / 23.97 * (shiftKey ? -1 : 1));
       break;
     case 37:
       // Left
