@@ -128,6 +128,8 @@ function captureVideo() {
     } else {
       pom.click();
     }
+    // 60s later, destroy the URL.
+    setTimeout(() => URL.revokeObjectURL(url), 60 * 1000);
   }, 'image/png');
 }
 
