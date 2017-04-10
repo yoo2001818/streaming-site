@@ -131,6 +131,22 @@ function captureVideo() {
   }, 'image/png');
 }
 
+const playbackRates = [
+  0.02, 0.03, 0.06, 0.12, 0.25, 0.33, 0.5, 0.66, 0.75,
+  1,
+  1.5, 2, 3, 4, 8, 16, 32, 64,
+];
+
+let playbackPos = playbackRates.indexOf(1);
+
+function updatePlaybackRate() {
+  if (video.playbackRate > 0) {
+    video.playbackRate = playbackRates[playbackPos];
+  } else {
+    video.playbackRate = -playbackRates[playbackPos];
+  }
+}
+
 // Handle left / right, frame seeking, capturing.
 function handleKeyDown(e) {
   const { keyCode, ctrlKey, shiftKey, altKey } = e;
@@ -167,6 +183,24 @@ function handleKeyDown(e) {
       // Play / pause.
       if (video.paused) video.play();
       else video.pause();
+      break;
+    // U: Invert direction
+    case 85:
+      video.playbackRate *= -1;
+      console.log(video.playbackRate);
+      break;
+    // I-O-P
+    case 73:
+      playbackPos = Math.max(0, playbackPos - 1);
+      updatePlaybackRate();
+      break;
+    case 79:
+      playbackPos = playbackRates.indexOf(1);
+      updatePlaybackRate();
+      break;
+    case 80:
+      playbackPos = Math.min(playbackRates.length - 1, playbackPos + 1);
+      updatePlaybackRate();
       break;
     default:
       return;
