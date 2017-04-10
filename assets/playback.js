@@ -61,6 +61,76 @@ function toggleFullscreen() {
   }
 }
 
+// Copied from the old version of left-pad
+/*
+DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
+        Version 2, December 2004
+
+Copyright (C) 2014 Azer Koçulu <azer@roadbeats.com>
+
+Everyone is permitted to copy and distribute verbatim or modified
+copies of this license document, and changing it is allowed as long
+as the name is changed.
+
+DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
+TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
+
+0. You just DO WHAT THE FUCK YOU WANT TO.
+*/
+function leftPad(str, len, ch) {
+  str = String(str);
+  let i = -1;
+  if (!ch && ch !== 0) ch = ' ';
+  len = len - str.length;
+  while (++i < len) {
+    str = ch + str;
+  }
+  return str;
+}
+
+function formatDate(date) {
+  return leftPad(date.getFullYear(), 4, '0') + '-' +
+  leftPad(date.getMonth() + 1, 2, '0') + '-' +
+  leftPad(date.getDate(), 2, '0') + '-' +
+  leftPad(date.getHours(), 2, '0') + 'h' +
+  leftPad(date.getMinutes(), 2, '0') + 'm' +
+  leftPad(date.getSeconds(), 2, '0') + 's' +
+  leftPad(date.getMilliseconds(), 3, '0');
+}
+
+function captureVideo() {
+  // Create canvas element
+  let canvas = document.createElement('canvas');
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  // Draw video to canvas
+  let ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(video, 0, 0);
+  canvas.toBlob(b => {
+    // Trick mimetype to store to special location
+    let blob = b.slice(0, b.size, 'type/x-vlcsnap+png');
+    // let blob = new Blob(b, { type: 'type/x-vlcsnap+png'});
+    // Create anchor element
+    let pom = document.createElement('a');
+    let url = URL.createObjectURL(blob);
+    pom.setAttribute('href', url);
+    // Include video information
+    let videoName = document.querySelector('.breadcrumb li:last-child a').text;
+    videoName = videoName.replace(/\s+/g, '-');
+    pom.setAttribute('download', 'vlcsnap-' + formatDate(new Date()) + '-' +
+    videoName + '.png');
+    // And process the image
+    if (document.createEvent) {
+      let event = document.createEvent('MouseEvents');
+      event.initEvent('click', true, true);
+      pom.dispatchEvent(event);
+    } else {
+      pom.click();
+    }
+  }, 'image/png');
+}
+
 // Handle left / right, frame seeking, capturing.
 function handleKeyDown(e) {
   const { keyCode, ctrlKey, shiftKey, altKey } = e;
@@ -85,7 +155,9 @@ function handleKeyDown(e) {
       video.currentTime += getOffset(e);
       break;
     case 83:
-      // Capture. Not implemented yet
+      // Capture.
+      if (!shiftKey) return;
+      captureVideo();
       break;
     case 70:
       // Fullscreen.
