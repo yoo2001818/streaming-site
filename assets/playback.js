@@ -28,6 +28,12 @@ if (window.localStorage[videoSavedId] != null) {
   video.currentTime = window.localStorage[videoSavedId];
 }
 
+video.addEventListener('ended', () => {
+  // Continue to next video, if available.
+  let link = document.querySelector('.listing .file.selected + .file .title a');
+  location.href = link.href + location.hash;
+});
+
 function getOffset(e) {
   let bitSet = 0;
   if (e.shiftKey) bitSet |= 1;
