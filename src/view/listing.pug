@@ -1,28 +1,4 @@
 extends browser.pug
+include listingWidget
 block content
-  ul.listing.text
-    for directory in directories
-      li.directory
-        a(href=directory.path)
-          span.title= directory.filename
-          span.metadata
-            span.updated= formatDate(directory.updated)
-    for file in files
-      li.file
-        span.title
-          a(href=file.path)= file.filename
-        span.metadata
-          if file.hasSubtitle
-            span.subtitle(title='has subtitle')
-              span.content
-          ul.encodes
-            for encode in file.encodes
-              li.encode.other
-                a.content(href=file.path + '#' + encode.name)
-                  span.name= encode.name
-                  span.size= encode.size
-            li.encode.original
-              span.content
-                span.name= 'Original'
-                span.size= file.size
-          span.updated= formatDate(file.updated)
+  +listingWidget(files, directories)

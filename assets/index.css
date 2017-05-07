@@ -216,6 +216,9 @@ input[type='button']:active, input[type='submit']:active {
 .listing > li:nth-child(2n) {
   background-color: #f8f8f8;
 }
+.listing > li.selected {
+  background-color: #cfedfd;
+}
 
 .listing > li:after {
   content: '';
