@@ -17,6 +17,17 @@ swapVideo(location.hash.slice(1));
 window.addEventListener('hashchange', () => swapVideo(location.hash.slice(1)),
   false);
 
+const videoSavedId = 'saved-' + location.pathname;
+// Set previous position on leave.
+window.addEventListener('beforeunload', () => {
+  let position = video.currentTime === video.duration ? 0 : video.currentTime;
+  window.localStorage[videoSavedId] = position;
+});
+
+if (window.localStorage[videoSavedId] != null) {
+  video.currentTime = window.localStorage[videoSavedId];
+}
+
 function getOffset(e) {
   let bitSet = 0;
   if (e.shiftKey) bitSet |= 1;
@@ -165,7 +176,7 @@ function handleKeyDown(e) {
       // Frame seek
       // Assume 23.97fps, as majority of video library uses 24fps
       video.pause();
-      seekRelative(1 / 23.97 * (shiftKey ? -1 : 1));
+      video.currentTime += 1 / 23.97 * (shiftKey ? -1 : 1);
       break;
     case 37:
       // Left
