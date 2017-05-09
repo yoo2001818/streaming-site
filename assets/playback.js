@@ -31,7 +31,9 @@ if (window.localStorage[videoSavedId] != null) {
 video.addEventListener('ended', () => {
   // Continue to next video, if available.
   let link = document.querySelector('.listing .file.selected + .file .title a');
-  location.href = link.href + location.hash;
+  if (link != null) {
+    location.href = link.href + location.hash;
+  }
 });
 
 function getOffset(e) {
