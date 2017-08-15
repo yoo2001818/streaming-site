@@ -22,4 +22,5 @@ block content
       li.srt
         a(href=srtFile.path + '?download' download)= srtFile.name
   script(src='/assets/playback.js')
-  +listingWidget(listing.files, listing.directories)
+  if listing != null
+    +listingWidget(listing.files, listing.directories)

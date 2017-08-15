@@ -3,7 +3,11 @@
 const Router = require('express').Router;
 const authTest = require('./util/auth');
 
+const parseurl = require('parseurl');
+
 const router = new Router();
+
+const PATH_FILTER = /(?:^|[\\\/])\.\.(?:[\\\/]|$)/;
 
 router.route('/login')
 .get((req, res) => {
@@ -26,7 +30,18 @@ router.route('/login')
 
 router.use((req, res, next) => {
   // Deny access to the rest of service if unauthorized.
-  if (req.session.authorized) return next();
+  // But if the resource is shared, allow access regardless of the login state.
+  // To detect them, use a config file. Since most of the video URLs never
+  // overlap, we can just check for entry in passwd file.
+  let pathVal = decode(parseurl(req).pathname);
+  if (PATH_FILTER.test(pathVal)) return res.status(400).send('Path invalid');
+  if (pathVal.indexOf('\0') !== -1) return res.status(400).send('Path invalid');
+  req.hasAccess = (path) => {
+    if (req.session.authorized) return true;
+    if (authTest.fileCheck(path)) return true;
+    return false;
+  }
+  if (req.hasAccess(pathVal)) return next();
   res.status(401);
   if (req.accepts('html')) {
     res.render('login', { callback: encodeURIComponent(req.path) || '' });

@@ -15,3 +15,15 @@ module.exports = function (username, password) {
     return false;
   });
 }
+
+module.exports.fileCheck = function (name) {
+  return fs.readFile(passwd, 'utf-8')
+  .then(data => {
+    let passwds = data.split('\n').filter(v => v[0] === '~');
+    if (passwds.some(v => name.indexOf(v) !== -1)) return true;
+    return false;
+  })
+  .catch(() => {
+    return false;
+  });
+}

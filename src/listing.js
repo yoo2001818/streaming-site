@@ -183,7 +183,9 @@ module.exports = function listing(req, res, next) {
       }));
       // Render it....
       res.render('playback', Object.assign({ name: remainingPath, mp4Files,
-        srtFiles, vttFiles, listing: dirInfo }, baseLocals));
+        srtFiles, vttFiles,
+        listing: req.hasAccess(parentListingPath) ? dirInfo : null,
+      }, baseLocals));
     });
   })
   .catch(err => {
