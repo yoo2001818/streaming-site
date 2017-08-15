@@ -9,6 +9,14 @@ const router = new Router();
 
 const PATH_FILTER = /(?:^|[\\\/])\.\.(?:[\\\/]|$)/;
 
+function decode(url) {
+  try {
+    return decodeURIComponent(url);
+  } catch (e) {
+    return '';
+  }
+}
+
 router.route('/login')
 .get((req, res) => {
   res.render('login', { callback: '' });
@@ -28,7 +36,7 @@ router.route('/login')
   });
 });
 
-router.use((req, res, next) => {
+router.use(async (req, res, next) => {
   // Deny access to the rest of service if unauthorized.
   // But if the resource is shared, allow access regardless of the login state.
   // To detect them, use a config file. Since most of the video URLs never
@@ -36,12 +44,12 @@ router.use((req, res, next) => {
   let pathVal = decode(parseurl(req).pathname);
   if (PATH_FILTER.test(pathVal)) return res.status(400).send('Path invalid');
   if (pathVal.indexOf('\0') !== -1) return res.status(400).send('Path invalid');
-  req.hasAccess = (path) => {
+  req.hasAccess = async (path) => {
     if (req.session.authorized) return true;
-    if (authTest.fileCheck(path)) return true;
+    if (await authTest.fileCheck(path)) return true;
     return false;
   }
-  if (req.hasAccess(pathVal)) return next();
+  if (await req.hasAccess(pathVal)) return next();
   res.status(401);
   if (req.accepts('html')) {
     res.render('login', { callback: encodeURIComponent(req.path) || '' });

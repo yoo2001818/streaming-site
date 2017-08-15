@@ -132,6 +132,7 @@ module.exports = function listing(req, res, next) {
     let remainingPath = realPath.slice(parentPath.length + 1);
     let parentListingPath = path.join(listingPath, '..');
     return Promise.all([
+      req.hasAccess(parentListingPath),
       Promise.all([readdir(parentPath)].concat(config.videoEncode ? [
         readdir(parentEncodePath)
         // Ignore errors
@@ -141,7 +142,7 @@ module.exports = function listing(req, res, next) {
         v.filename.startsWith(remainingPath)))),
       processDir(parentListingPath)
     ])
-    .then(([[list, encodeList], dirInfo]) => {
+    .then(([listingAccess, [list, encodeList], dirInfo]) => {
       if (list.length === 0) return next();
       // Look for mp4 file
       let mp4File = list.find(v => /\.(mp4|mkv|m4v)$/.test(v.filename));
@@ -184,7 +185,7 @@ module.exports = function listing(req, res, next) {
       // Render it....
       res.render('playback', Object.assign({ name: remainingPath, mp4Files,
         srtFiles, vttFiles,
-        listing: req.hasAccess(parentListingPath) ? dirInfo : null,
+        listing: listingAccess ? dirInfo : null,
       }, baseLocals));
     });
   })

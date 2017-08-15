@@ -16,11 +16,11 @@ module.exports = function (username, password) {
   });
 }
 
-module.exports.fileCheck = function (name) {
+module.exports.fileCheck = function (path) {
   return fs.readFile(passwd, 'utf-8')
   .then(data => {
     let passwds = data.split('\n').filter(v => v[0] === '~');
-    if (passwds.some(v => name.indexOf(v) !== -1)) return true;
+    if (passwds.some(v => path.indexOf(v.slice(1)) !== -1)) return true;
     return false;
   })
   .catch(() => {
