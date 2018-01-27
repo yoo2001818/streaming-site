@@ -57,7 +57,7 @@ function processDir(pathVal) {
     let directories = list.filter(stats => stats.isDirectory())
       // Hide video encode directory
       .filter(stats => path.resolve(realPath, stats.filename) !==
-        config.videoEncode)
+        config.videoEncode && stats.filename[0] !== '.')
       .map(stats => ({
         filename: stats.filename,
         path: encodeurl(path.resolve(listingPath,
@@ -65,6 +65,7 @@ function processDir(pathVal) {
         updated: stats.mtime,
       }));
     let files = list.filter(stats => stats.isFile() &&
+      stats.filename[0] !== '.' &&
       /\.(mp4|mkv|m4v)$/.test(stats.filename)).map(stats => ({
         filename: stats.filename.slice(0, -4),
         path: encodeurl(path.resolve(listingPath,
