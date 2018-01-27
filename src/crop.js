@@ -53,8 +53,10 @@ router.get('/crop', (req, res, next) => {
       if (!stats.isFile()) return res.status(404).send('Invalid file');
       res.sendFile(destFile);
     }, () => {
-      if (!req.session.authorized) return res.sendStatus(401);
       // Then run ffmpeg! :O
+      if (!req.session.authorized) {
+        return res.status(401).send('Unauthorized to create a new video crop.');
+      }
       let proc = spawn(config.cropCmd,
         ['-ss', start.toFixed(2), '-i', realPath,
           '-t', (end - start).toFixed(2),

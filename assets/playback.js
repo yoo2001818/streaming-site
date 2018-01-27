@@ -176,6 +176,25 @@ function seekRelative(v) {
   }
 }
 
+let cropStart = 0;
+let cropEnd = 0;
+
+function updateCrop() {
+  // Use the 2nd source, if any.
+  let sources = video.querySelectorAll('source');
+  let source = sources[1] || sources[0];
+  let url = location.origin + '/crop?path=' +
+    encodeURIComponent(source.src.slice(location.origin.length)) +
+    '&start=' + cropStart.toFixed(2) + '&end=' + cropEnd.toFixed(2);
+  // Copy the generated link to clipboard.
+  let input = document.createElement('input');
+  document.body.appendChild(input);
+  input.value = url;
+  input.select();
+  document.execCommand('copy', false);
+  input.remove();
+}
+
 // Handle left / right, frame seeking, capturing.
 function handleKeyDown(e) {
   const { keyCode, ctrlKey, shiftKey, altKey } = e;
@@ -185,6 +204,15 @@ function handleKeyDown(e) {
       // Assume 23.97fps, as majority of video library uses 24fps
       video.pause();
       video.currentTime += 1 / 23.97 * (shiftKey ? -1 : 1);
+      break;
+    case 188:
+      // Seeking by comma and period
+      video.pause();
+      video.currentTime -= 1 / 23.97;
+      break;
+    case 190:
+      video.pause();
+      video.currentTime += 1 / 23.97;
       break;
     case 37:
       // Left
@@ -200,8 +228,21 @@ function handleKeyDown(e) {
       captureVideo();
       break;
     case 70:
-      // Fullscreen.
-      toggleFullscreen();
+      if (shiftKey) {
+        // Set crop start
+        cropStart = video.currentTime;
+        updateCrop();
+      } else {
+        // Fullscreen.
+        toggleFullscreen();
+      }
+      break;
+    case 71:
+      if (shiftKey) {
+        // Set crop end
+        cropEnd = video.currentTime;
+        updateCrop();
+      }
       break;
     case 32:
       // Play / pause.
