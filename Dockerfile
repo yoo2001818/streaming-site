@@ -1,5 +1,5 @@
 FROM arm32v7/node:8-slim
-RUN apt-get update && apt-get install -y avconv-tools
+RUN apt-get update && apt-get install -y libav-tools
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 COPY package.json /usr/src/app/
