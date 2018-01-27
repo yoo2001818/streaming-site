@@ -24,6 +24,9 @@ module.exports = {
   // Bandwidth limit in bps.
   bandwidth: 5500 * 1024,
   passwd: path.resolve(__dirname, 'passwd'),
+  // If specified, crop will be enabled
+  cropCmd: '/usr/bin/ffmpeg',
+  cropPath: path.resolve(__dirname, '../crop'),
 };
 
 if (process.env.CONFIG_PATH != null) {

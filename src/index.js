@@ -22,6 +22,7 @@ app.set('views', path.resolve(__dirname, 'view'));
 // right into index file.
 app.use(logger);
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 app.use(session({
   resave: false,
   saveUninitialized: false,
@@ -36,6 +37,7 @@ app.use(require('./auth'));
 
 const createThrottle = () => new Throttle(config.bandwidth);
 let videoStatic = serveStatic(config.video);
+app.use(require('./crop'));
 app.use((req, res, next) => {
   // stream emits 'pipe' event when piped
   res.on('pipe', function (readStream) {
