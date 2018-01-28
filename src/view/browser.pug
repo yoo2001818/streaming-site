@@ -4,11 +4,13 @@ block header
     .upper
       h1.title
         | kkiro.kr Video Library
-      a.logout(href='/logout')= 'Logout'
-    ul.breadcrumb.list-strip
-      for crumb, index in breadcrumbs
-        li
-          a(href=crumb.sliced)
-            = crumb.name
-            if index === 0
-              span.slash= '/'
+      if authorized
+        a.logout(href='/logout')= 'Logout'
+    if breadcrumbs != null
+      ul.breadcrumb.list-strip
+        for crumb, index in breadcrumbs
+          li
+            a(href=crumb.sliced)
+              = crumb.name
+              if index === 0
+                span.slash= '/'

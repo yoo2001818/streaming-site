@@ -49,6 +49,7 @@ router.use(async (req, res, next) => {
     if (await authTest.fileCheck(path)) return true;
     return false;
   }
+  res.locals.authorized = req.session.authorized;
   if (await req.hasAccess(pathVal)) return next();
   res.status(401);
   if (req.accepts('html')) {

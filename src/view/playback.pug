@@ -1,5 +1,14 @@
 extends browser.pug
 include listingWidget
+block meta
+  meta(property='og:site_name', content='kkiro.kr Library')
+  meta(property='og:title', content=name)
+  meta(property='og:type', content='video.other')
+  meta(property='og:url', content=mp4Files[0].src)
+  meta(property='og:description', content='kkiro.kr Library')
+  meta(property='og:video', content=protocol + '://' + host + mp4Files[0].path)
+  meta(property='og:video:secure_url', content= 'https://' + host + mp4Files[0].path)
+  meta(property='og:video:type', content='video/mp4')
 block content
   #playback-container
     .aspect-ratio
@@ -13,7 +22,7 @@ block content
       li.encoding
         a(href='#' + mp4File.encoding)
           span.name= mp4File.encoding
-          span.size= mp4File.size
+          span.size= formatSize(mp4File.size)
   ul.download-list.text
     for mp4File in mp4Files
       li.mp4

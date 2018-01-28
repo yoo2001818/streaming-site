@@ -8,6 +8,7 @@ const srt2vtt = require('srt-to-vtt');
 const replaceStream = require('replacestream');
 
 const formatDate = require('./util/formatDate');
+const formatSize = require('./util/formatSize');
 const config = require('../config');
 
 const PATH_FILTER = /(?:^|[\\\/])\.\.(?:[\\\/]|$)/;
@@ -18,17 +19,6 @@ function decode(url) {
   } catch (e) {
     return '';
   }
-}
-
-function stringifySize(_size) {
-  let size = _size;
-  if (size < 1024) return size + 'B';
-  size /= 1024;
-  if (size < 1024) return size.toFixed(1) + 'kB';
-  size /= 1024;
-  if (size < 1024) return size.toFixed(1) + 'MB';
-  size /= 1024;
-  return size.toFixed(1) + 'GB';
 }
 
 function readdir(readPath) {
@@ -70,7 +60,7 @@ function processDir(pathVal) {
         filename: stats.filename.slice(0, -4),
         path: encodeurl(path.resolve(listingPath,
           encodeURIComponent(stats.filename.slice(0, -4)))),
-        size: stringifySize(stats.size),
+        size: stats.size,
         updated: stats.mtime,
         hasSubtitle:
           list.some(v => v.filename.startsWith(stats.filename.slice(0, -4))
@@ -80,7 +70,7 @@ function processDir(pathVal) {
             && /\.(mp4|mkv|m4v)$/.test(v.filename))
           .map(v => ({
             name: /\.([^.]+)\.(mp4|mkv|m4v)$/.exec(v.filename)[1],
-            size: stringifySize(v.size),
+            size: v.size,
           })),
       }));
     return { root: listingPath === '/', directories, files };
@@ -108,6 +98,9 @@ module.exports = function listing(req, res, next) {
     ascendPath: path.join(listingPath, '..'),
     ascendPathEncoded: encodeurl(path.join(listingPath, '..')),
     formatDate,
+    formatSize,
+    protocol: req.protocol,
+    host: req.get('host'),
   };
   fs.stat(realPath)
   .then(stats => {
@@ -153,7 +146,7 @@ module.exports = function listing(req, res, next) {
         name: mp4File.filename,
         path: encodeurl(path.resolve(parentListingPath,
           encodeURIComponent(mp4File.filename))),
-        size: stringifySize(mp4File.size),
+        size: mp4File.size,
       };
       let mp4Files = encodeList.filter(v =>
         v.filename.startsWith(mp4File.name.slice(0, -4)) &&
@@ -163,7 +156,7 @@ module.exports = function listing(req, res, next) {
           name: v.filename,
           path: encodeurl(path.resolve(parentEncodeListingPath,
             encodeURIComponent(v.filename))),
-          size: stringifySize(v.size),
+          size: v.size,
         }));
       // Prepend original mp4 file
       mp4Files.unshift(mp4File);

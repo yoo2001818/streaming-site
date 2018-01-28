@@ -19,9 +19,9 @@ mixin listingWidget(files, directories)
               li.encode.other
                 a.content(href=file.path + '#' + encode.name)
                   span.name= encode.name
-                  span.size= encode.size
+                  span.size= formatSize(encode.size)
             li.encode.original
               span.content
                 span.name= 'Original'
-                span.size= file.size
+                span.size= formatSize(file.size)
           span.updated= formatDate(file.updated)
