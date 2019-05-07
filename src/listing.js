@@ -51,7 +51,7 @@ function processDir(pathVal) {
       .map(stats => ({
         filename: stats.filename,
         path: encodeurl(path.resolve(listingPath,
-          encodeURIComponent(stats.filename))),
+          encodeURI(stats.filename))),
         updated: stats.mtime,
       }));
     let files = list.filter(stats => stats.isFile() &&
@@ -59,7 +59,7 @@ function processDir(pathVal) {
       /\.(mp4|mkv|m4v)$/.test(stats.filename)).map(stats => ({
         filename: stats.filename.slice(0, -4),
         path: encodeurl(path.resolve(listingPath,
-          encodeURIComponent(stats.filename.slice(0, -4)))),
+          encodeURI(stats.filename.slice(0, -4)))),
         size: stats.size,
         updated: stats.mtime,
         hasSubtitle:
@@ -145,7 +145,7 @@ module.exports = function listing(req, res, next) {
         encoding: 'Original',
         name: mp4File.filename,
         path: encodeurl(path.resolve(parentListingPath,
-          encodeURIComponent(mp4File.filename))),
+          encodeURI(mp4File.filename))),
         size: mp4File.size,
       };
       let mp4Files = encodeList.filter(v =>
@@ -155,7 +155,7 @@ module.exports = function listing(req, res, next) {
           encoding: /\.([^.]+)\.(mp4|mkv|m4v)$/.exec(v.filename)[1],
           name: v.filename,
           path: encodeurl(path.resolve(parentEncodeListingPath,
-            encodeURIComponent(v.filename))),
+            encodeURI(v.filename))),
           size: v.size,
         }));
       // Prepend original mp4 file
@@ -166,7 +166,7 @@ module.exports = function listing(req, res, next) {
       let srtFiles = list.filter(v => v.filename.endsWith('.srt')).map(v => ({
         name: v.filename,
         path: encodeurl(path.resolve(parentListingPath,
-          encodeURIComponent(v.filename))),
+          encodeURI(v.filename))),
         lang: v.filename.endsWith('.Korean.srt') ? 'ko' : 'en',
         label: v.filename.endsWith('.Korean.srt') ? '한국어' : 'English',
       }));
