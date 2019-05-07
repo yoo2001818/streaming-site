@@ -18,9 +18,12 @@ window.addEventListener('hashchange', () => swapVideo(location.hash.slice(1)),
   false);
 
 const videoSavedId = 'saved-' + location.pathname;
-// Set previous position on leave.
+// Set previous position on leave, however, if the position is close enough
+// to the end, just forget it.
 window.addEventListener('beforeunload', () => {
-  let position = video.currentTime === video.duration ? 0 : video.currentTime;
+  let position = video.duration - video.currentTime < 10 ?
+    0 :
+    video.currentTime;
   window.localStorage[videoSavedId] = position;
 });
 
