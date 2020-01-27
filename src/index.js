@@ -17,6 +17,7 @@ const config = require('../config');
 let app = express();
 app.set('view engine', 'pug');
 app.set('views', path.resolve(__dirname, 'view'));
+app.set('trust proxy', 'uniquelocal');
 
 // App middlewares. Since there aren't many of them, I've decied to put them
 // right into index file.

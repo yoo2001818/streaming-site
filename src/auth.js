@@ -47,6 +47,7 @@ router.use(async (req, res, next) => {
   req.hasAccess = async (path) => {
     if (req.session.authorized) return true;
     if (await authTest.fileCheck(path)) return true;
+    if (await authTest.ipCheck(req.ip)) return true;
     return false;
   }
   res.locals.authorized = req.session.authorized;
